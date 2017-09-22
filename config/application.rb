@@ -29,5 +29,17 @@ module StarterRailsApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    config.generators do |g|
+      g.test_framework :rspec, views: false, fixture: true
+      g.fixture_replacement :factory_girl, dir: 'spec/factories'
+    end
+
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins ENV['WHITELIST_ORIGINS']
+        resource ENV['WHITELIST_ORIGINS'], :headers => :any, :methods => [:get, :post, :put, :options, :delete]
+      end
+    end
   end
 end
